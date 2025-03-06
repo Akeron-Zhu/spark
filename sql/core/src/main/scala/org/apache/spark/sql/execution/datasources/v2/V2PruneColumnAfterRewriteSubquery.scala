@@ -77,12 +77,6 @@ object V2PruneColumnAfterRewriteSubquery extends Rule[LogicalPlan] with Logging 
     val allFilters = filtersPushDown.reduceOption(And).toSeq ++ filtersStayUp
     val exprs = projects ++ allFilters
     val requiredColumns = AttributeSet(exprs.flatMap(_.references))
-    logInfo(
-      s"""
-         |Scan output: ${dssr.output.mkString(", ")}
-         |Expr output: ${exprs.mkString(", ")}
-         |Return: ${!AttributeSet(dssr.output).equals(exprs)}
-         """.stripMargin)
     !AttributeSet(dssr.output).equals(requiredColumns)
   }
 }

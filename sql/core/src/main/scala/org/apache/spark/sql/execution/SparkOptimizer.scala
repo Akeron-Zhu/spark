@@ -97,7 +97,7 @@ class SparkOptimizer(
       ConstantFolding),
     Batch("User Provided Optimizers", fixedPoint, experimentalMethods.extraOptimizations: _*),
     Batch("Replace CTE with Repartition", Once, ReplaceCTERefWithRepartition),
-    Batch("Prune column after RewriteSubquery for DSV2", fixedPoint,
+    Batch("Prune column after RewriteSubquery for DSV2", Once,
       V2PruneColumnAfterRewriteSubquery)))
 
   override def nonExcludableRules: Seq[String] = super.nonExcludableRules ++
