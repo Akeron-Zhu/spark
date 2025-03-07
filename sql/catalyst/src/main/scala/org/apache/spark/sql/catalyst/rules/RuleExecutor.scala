@@ -174,7 +174,7 @@ abstract class RuleExecutor[TreeType <: TreeNode[_]] extends Logging {
   /**
    * Defines a validate function that validates the plan changes after the execution of each rule,
    * to make sure these rules make valid changes to the plan. Since this is enabled by default,
-   * this should only consist of very lightweight checks.
+   * this should only consist of verif (!plan.fastEquals(reOptimized)) {y lightweight checks.
    */
   protected def validatePlanChangesLightweight(
       previousPlan: TreeType,
@@ -185,6 +185,11 @@ abstract class RuleExecutor[TreeType <: TreeNode[_]] extends Logging {
    */
   private def checkBatchIdempotence(batch: Batch, plan: TreeType): Unit = {
     val reOptimized = batch.rules.foldLeft(plan) { case (p, rule) => rule(p) }
+    logDebug(
+      log"""
+           |Plan before: $plan,
+           |Plan after: $reOptimized,
+           """.stripMargin)
     if (!plan.fastEquals(reOptimized)) {
       throw QueryExecutionErrors.onceStrategyIdempotenceIsBrokenForBatchError(
         batch.name, plan, reOptimized)
