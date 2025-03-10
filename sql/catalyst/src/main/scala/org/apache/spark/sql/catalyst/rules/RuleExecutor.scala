@@ -185,11 +185,7 @@ abstract class RuleExecutor[TreeType <: TreeNode[_]] extends Logging {
    */
   private def checkBatchIdempotence(batch: Batch, plan: TreeType): Unit = {
     val reOptimized = batch.rules.foldLeft(plan) { case (p, rule) => rule(p) }
-    logDebug(
-      log"""
-           |Plan before: $plan,
-           |Plan after: $reOptimized,
-           """.stripMargin)
+    logDebug("Plan before: " + plan + "\nPlan after:" + reOptimized + '\n')
     if (!plan.fastEquals(reOptimized)) {
       throw QueryExecutionErrors.onceStrategyIdempotenceIsBrokenForBatchError(
         batch.name, plan, reOptimized)
